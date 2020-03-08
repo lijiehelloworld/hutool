@@ -294,6 +294,7 @@ public class ExchangeTest {
             try {
                 JSONArray content = JSONUtil.parseObj(result).getJSONArray("content");
                 num = content.size();
+                Console.log("num:{}",num);
                 for (int i = 0; i < threadNum; i++) {
                     Integer finalNum = num;
                     int finalI = i;
@@ -315,9 +316,9 @@ public class ExchangeTest {
                 e.printStackTrace();
             }
             do {
-                Thread.sleep(10000);
+                Thread.sleep(1000);
                 activeCount = ((ThreadPoolExecutor) cachedThreadPool).getActiveCount();
-                System.out.println(activeCount);
+                Console.log("activeCoun:{}",activeCount);
             } while (activeCount>0);
         } while (num != 0);
     }
