@@ -315,7 +315,7 @@ public class ExchangeTest {
                 e.printStackTrace();
             }
             do {
-                Thread.sleep(6000);
+                Thread.sleep(10000);
                 activeCount = ((ThreadPoolExecutor) cachedThreadPool).getActiveCount();
                 System.out.println(activeCount);
             } while (activeCount>0);
