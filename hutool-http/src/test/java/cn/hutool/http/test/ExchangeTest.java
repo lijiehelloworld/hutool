@@ -20,6 +20,7 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class ExchangeTest {
 
@@ -278,6 +279,7 @@ public class ExchangeTest {
             HashMap<String, Object> form = new HashMap<>();
             form.put("pageNo", 1);
             form.put("pageSize", 1000);
+            int activeCount=0;
 //            Console.log(form.toString());
             String result = HttpUtil
                     .createPost("http://36.153.147.94:81/exchange/order/personal/current")
@@ -302,20 +304,21 @@ public class ExchangeTest {
                             for (int j = finalI * (finalNum / threadNum); j < (finalI + 1) * (finalNum / threadNum); j++) {
                                 String orderId = JSONUtil.parseObj(content.get(j)).getStr("orderId");
                                 cancalOreder(token, orderId);
-//                                Console.log("j:{}     -----------     (k + 1) * (finalNum / threadNum):{}",j,(finalI + 1) * (finalNum / threadNum));
+//                                Console.log("当前线程名：{}----j:{}     -----------     (k + 1) * (finalNum / threadNum):{}" ,Thread.currentThread().getId()+Thread.currentThread().getName(),j,(finalI + 1) * (finalNum / threadNum));
                                 Thread.sleep(Double.valueOf(100 * (1 + getRandomNum(4))).longValue());
                             }
                         }
                     });
-                    do {
-                        Thread.sleep(6000);
-//                        System.out.println(cachedThreadPool.isTerminated());
-                    } while (!cachedThreadPool.isTerminated());
-                }
 
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            do {
+                Thread.sleep(6000);
+                activeCount = ((ThreadPoolExecutor) cachedThreadPool).getActiveCount();
+                System.out.println(activeCount);
+            } while (activeCount>0);
         } while (num != 0);
     }
 
